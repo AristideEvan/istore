@@ -40,7 +40,7 @@ class RemiseController extends Controller
      */
     public function store(Request $request)
     {
-         DB::beginTransaction();
+        DB::beginTransaction();
         try {
             $request->validate([
                 'tauxRemise' => 'required',

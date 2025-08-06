@@ -16,9 +16,6 @@ class RavitaillementController extends Controller
     // declaration des variables 
     private $msgSuccess ="Opération effectuée avec succès";
 
-    // private $qteInitial;
-    // private $qteRavi;
-    // private $qteRestant;
     
     /**
      * Display a listing of the resource.
@@ -65,8 +62,6 @@ class RavitaillementController extends Controller
      */
     public function store(Request $request)
     {
-        //dd(request());
-    
         $request->validate([
             'dateRavi' =>['required','date'],
             'qteRavi' => ['required','array'],

@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ActionController;
 use App\Http\Controllers\AjaxController;
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\ClientController;
 use App\Http\Controllers\DelaiReglementController;
 use App\Http\Controllers\FournisseurController;
 use App\Http\Controllers\ProfilController;
@@ -474,3 +475,9 @@ Route::resource('prixes', PrixController::class);
 Route::get('prixes/{rub}/{srub}', [PrixController::class, 'index']);
 //Route::get('prixes/create/{rub}/{srub}', [PrixController::class, 'create']);
 Route::get('prixes/{id}/edit/{rub}/{srub}', [PrixController::class, 'edit']);
+
+//Route client
+Route::resource('clients', ClientController::class);
+Route::get('clients/{rub}/{srub}', [ClientController::class, 'index']);
+Route::get('clients/create/{rub}/{srub}', [ClientController::class, 'create']);
+Route::get('clients/{id}/edit/{rub}/{srub}', [ClientController::class, 'edit']);

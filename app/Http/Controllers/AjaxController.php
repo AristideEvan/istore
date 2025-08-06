@@ -98,7 +98,6 @@ class AjaxController extends Controller
 
 
     public function getArticle($data){
-        $tabData = "(".$data.")";
         $data_modeAchat = ModeAchat::orderBy('libelleModeAchat','asc')->get();
         $articles=DB::select('SELECT * FROM articles WHERE article_id NOT IN ('.$data.')');
         $key = $this->genererNom();

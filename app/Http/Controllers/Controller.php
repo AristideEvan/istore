@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Client;
 use DateTime;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\DB;
@@ -385,4 +386,21 @@ abstract class Controller extends BaseController
         }
         return $shpPath;
     }
+
+    public function genererNumeroCompte()
+        {
+          $lastNumeroCompte= Client::whereNotNull('numeroCompte')
+                        ->orderBy('numeroCompte','DESC')
+                        ->value('numeroCompte');
+          $annee= date('y');
+          if ($lastNumeroCompte) {
+              $lastSequence = (int)substr($lastNumeroCompte, 0, 4);
+              $newNumero = $lastSequence + 1;
+          }else{
+            $newNumero=1;
+          }
+           return str_pad($newNumero, 4, '0', STR_PAD_LEFT) . $annee;            
+        }
+ 
+
 }
