@@ -1,0 +1,23 @@
+git checkout -b ajout-couche-carte
+git add .
+git commit -m "Ajout des couches pour la carte"
+git push origin ajout-couche-carte
+git branch
+git checkout main
+
+
+pour pousser sur la branche pincipale:
+git status
+git add .
+git commit -m "Ton message clair ici"
+git checkout main
+git pull origin main
+git merge ajout-couche-carte  // Fusionne brnache de travail dans main 
+git push origin main
+
+
+Resumer des commande: 
+git checkout main
+git pull origin main
+git merge ajout-couche-carte
+git push origin main
