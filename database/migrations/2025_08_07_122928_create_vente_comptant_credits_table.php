@@ -20,10 +20,10 @@ return new class extends Migration
             $table->double('mtTvaVente');
             $table->double('mtNetVente');
 
-            $table->unsignedBigInteger('modeReglement_id');
+            $table->unsignedBigInteger('modeReglement_id')->nullable();
             $table->unsignedBigInteger('taxe_id');
             $table->unsignedBigInteger('remise_id');
-            $table->unsignedBigInteger('delaiReglement_id');
+            $table->unsignedBigInteger('delaiReglement_id')->nullable();
 
             $table->foreign('modeReglement_id')
                 ->references('modeReglement_id')->on('mode_reglements')

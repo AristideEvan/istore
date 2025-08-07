@@ -28,8 +28,8 @@ class VenteComptantCreditController extends Controller
 
     public function index($rub,$srub)
     {
-        $datas = VenteComptantCredit::with('article','fournisseur','modeAchat','magasin')
-        ->orderBy('dateRavi', 'desc')
+        $datas = VenteComptantCredit::with('article')
+        ->orderBy('dateVente', 'desc')
         ->get();
         return view('vente_comptant_credit.index', [
             'datas'     => $datas,
@@ -45,8 +45,8 @@ class VenteComptantCreditController extends Controller
     public function create($rub,$srub)
     {
         $data_typeClient=TypeClient::orderBy('libelleTypeClient')->get();
-        $data_TypeVente = TypeVente::orderBy('libelleTypeVente')->get();
-        $data_typeArticle= TypeArticle::orderBy('libelleTypeArucle')->get();
+        $data_typeVente = TypeVente::orderBy('libelleTypeVente')->get();
+        $data_typeArticle= TypeArticle::orderBy('libelleTypeArticle')->get();
         $data_article= Article::orderBy('libelleArticle','asc')->get();
         $data_remise= Remise::orderBy('tauxRemise','asc')->get();
         $data_taxe= Taxe::orderBy('tauxTva');
@@ -56,7 +56,7 @@ class VenteComptantCreditController extends Controller
              'rub'              =>$rub,
              'srub'             =>$srub,
              'data_typeClient'  =>$data_typeClient,
-             'data_TypeVente'   =>$data_TypeVente,
+             'data_typeVente'   =>$data_typeVente,
              'data_typeArticle'  =>$data_typeArticle,
              'data_article'     =>$data_article,
              'data_remise'  =>$data_remise,
@@ -104,7 +104,7 @@ class VenteComptantCreditController extends Controller
 
              ]);
 
-            //IF TYPECLIENT === CLIENT CREDIT ELSE
+            //IF TYPECLIENT === CLIENT CREDIT
             $typeClient = DB::table('type_clients')
                         ->where('typeClient_id',$request->typeClient_id) 
                         ->value('libelleTypeClient');
@@ -112,7 +112,7 @@ class VenteComptantCreditController extends Controller
             if ($typeClient === 'CLIENT CREDIT'){
                 $clientCred= new VenteComptantCredit();
                
-            } else{ // CLIENT COMPTANR
+            } else{ // CLIENT COMPTANT
                
                 //table vente comptant
                 $clientComp= new VenteComptantCredit();
@@ -135,18 +135,18 @@ class VenteComptantCreditController extends Controller
                 $ligneComp->article_id= $request->article_id;
                 $ligneComp->client_id= $request->client_id;
                 $ligneComp->typeVente_id= $request->typeVente_id;
-                $venteId = DB::table('vente_comptant_credits')
+                $venteCompId = DB::table('vente_comptant_credits')
                         ->where('vente_id',$request->vente_id); 
-                $ligneComp->vente_id= $venteId;
+                $ligneComp->vente_id= $venteCompId;
                 $ligneComp->save();
 
                 //table recette
                 $recette =new Recette();
                 $recette->dateRecette= $request->dateRecette;
                 $recette->mtRecette= $request->mtRecette;
-                $venteId = DB::table('vente_comptant_credits')
+                $venteComId = DB::table('vente_comptant_credits')
                         ->where('vente_id',$request->vente_id);
-                $recette->vente_id= $venteId;
+                $recette->vente_id= $venteComId;
                 $recette->save();
             }
             

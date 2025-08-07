@@ -28,6 +28,7 @@ use App\Http\Controllers\TypeClientController;
 use App\Http\Controllers\TypeFournisseurController;
 use App\Http\Controllers\TypeLocaliteController;
 use App\Http\Controllers\TypeVenteController;
+use App\Http\Controllers\VenteComptantCreditController;
 
  Route::get('/', function () {
     return view('welcome');
@@ -481,8 +482,9 @@ Route::resource('clients', ClientController::class);
 Route::get('clients/{rub}/{srub}', [ClientController::class, 'index']);
 Route::get('clients/create/{rub}/{srub}', [ClientController::class, 'create']);
 Route::get('clients/{id}/edit/{rub}/{srub}', [ClientController::class, 'edit']);
-Route::resource('vente_comptant_credits', \App\Http\Controllers\VenteComptantCreditController::class);
-Route::resource('recettes', \App\Http\Controllers\RecetteController::class);
-Route::resource('reglements', \App\Http\Controllers\ReglementController::class);
-Route::resource('penalites', \App\Http\Controllers\PenaliteController::class);
-Route::resource('ligne_ventes', \App\Http\Controllers\LigneVenteController::class);
+
+//Route vente
+Route::resource('venteComptantCredits', VenteComptantCreditController::class);
+Route::get('venteComptantCredits/{rub}/{srub}', [VenteComptantCreditController::class, 'index']);
+Route::get('venteComptantCredits/create/{rub}/{srub}', [VenteComptantCreditController::class, 'create']);
+Route::get('venteComptantCredits/{id}/edit/{rub}/{srub}', [VenteComptantCreditController::class, 'edit']);
