@@ -172,12 +172,31 @@ class RavitaillementController extends Controller
             $ravi->dateRavi=$request->dateRavi;
             $ravi->qteRavi=$request->qteRavi;
             $ravi->prixAchatRavi=$request->prixAchatRavi;
-            //$ravi->pointVente_id=$request->pointVente_id;
+            $ravi->pointVente_id=1; //$request->pointVente_id;
             $ravi->article_id=$request->article_id;
             $ravi->fournisseur_id=$request->fournisseur_id;
             $ravi->modeAchat_id=$request->modeAchat_id;
             $ravi->magasin_id=$request->magasin_id;    
             $ravi->save();
+                    // Mise à jour du stock
+                    $stock = Stock::where('article_id', $$request->article_id)
+                                ->where('pointVente_id', $ravi->pointVente_id)
+                                ->first();
+
+                    if ($stock) {
+                        $stock->qteInitial = $stock->qteRestant;
+                        $stock->qteRavi = $request->qteRavi;
+                        $stock->qteRestant = $stock->qteInitial + $request->qteRavi;
+                    } else {
+                        $stock = Stock::find($id);
+                        $stock->article_id = $request->article_id;
+                        $stock->pointVente_id = $ravi->pointVente_id;
+                        $stock->qteInitial = 0;
+                        $stock->qteRavi = $request->qteRavi;
+                        $stock->qteRestant = $request->qteRavi;
+                    }
+                    $stock->save();
+
             DB::commit();
 
         }catch(\Exception $e){

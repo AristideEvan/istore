@@ -481,3 +481,8 @@ Route::resource('clients', ClientController::class);
 Route::get('clients/{rub}/{srub}', [ClientController::class, 'index']);
 Route::get('clients/create/{rub}/{srub}', [ClientController::class, 'create']);
 Route::get('clients/{id}/edit/{rub}/{srub}', [ClientController::class, 'edit']);
+Route::resource('vente_comptant_credits', \App\Http\Controllers\VenteComptantCreditController::class);
+Route::resource('recettes', \App\Http\Controllers\RecetteController::class);
+Route::resource('reglements', \App\Http\Controllers\ReglementController::class);
+Route::resource('penalites', \App\Http\Controllers\PenaliteController::class);
+Route::resource('ligne_ventes', \App\Http\Controllers\LigneVenteController::class);

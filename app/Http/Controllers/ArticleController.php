@@ -72,7 +72,6 @@ class ArticleController extends Controller
             $article->datePeremption=$request->datePeremption;
             $article->typeArticle_id=$request->typeArticle_id;
             $article->pointVente_id=1;
-               //dd($article);
             $article->save();
             DB::commit();
 

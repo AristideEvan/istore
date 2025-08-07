@@ -114,7 +114,7 @@ class ClientController extends Controller
     {
         $data = Client::find($id);
         $data_typeClient= TypeClient::orderBy('libelleTypeClient','asc')->get();
-        return view('client.create')->with([
+        return view('client.edit')->with([
                         'rub'=>$rub,
                         'srub'=>$srub,
                         'data'=>$data,
@@ -130,7 +130,6 @@ class ClientController extends Controller
         DB::beginTransaction();
         try {
             $request->validate([
-                'numeroCompte' => ['nullable','string','max:255'],
                 'nomClient'    => ['required','string','max:255'],
                 'prenomClient' => ['nullable','string','max:255'],
                 'telephoneClient' => ['required','string','max:255'],
@@ -139,11 +138,15 @@ class ClientController extends Controller
                 'typeClient_id'=> 'required'
              ]);
 
-            //If libelleTypeClient== CLIENT CREDIT ELSE
-            $typeClient = TypeClient::all();
-            if ($typeClient == 'CLIENT CREDIT'){
+            //If libelleTypeClient === CLIENT CREDIT ELSE
+            $typeClient = DB::table('type_clients')
+                        ->where('typeClient_id',$request->typeClient_id) 
+                        ->value('libelleTypeClient');
+
+            if ($typeClient === 'CLIENT CREDIT'){
                 $client= Client::find($id);
-                $client->numeroCompte=$request->numeroCompte;
+                //$numero= $this->genererNumeroCompte();
+                //$client->numeroCompte=$numero;
                 $client->nomClient=$request->nomClient;
                 $client->prenomClient=$request->prenomClient;
                 $client->telephoneClient=$request->telephoneClient;
@@ -151,7 +154,8 @@ class ClientController extends Controller
                 $client->adresseClient=$request->adresseClient;
                 $client->typeClient_id=$request->typeClient_id;
                 $client->save();
-            } else{ //Autre que CLIEN CREDIT
+            } else{ //Autre que CLIENT CREDIT
+               
                 $client= Client::find($id);
                 $client->nomClient=$request->nomClient;
                 $client->prenomClient=$request->prenomClient;
@@ -169,7 +173,7 @@ class ClientController extends Controller
                $msgError = $e->getMessage();
                return back()->with(['error'=>$msgError]);
             }
-         return redirect('client/'.$request->input('rub').'/'.$request->input('srub'))->with(['success'=>$this->msgSuccess]);
+         return redirect('clients/'.$request->input('rub').'/'.$request->input('srub'))->with(['success'=>$this->msgSuccess]);
     }
 
     /**

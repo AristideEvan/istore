@@ -42,7 +42,7 @@
                                 <td>{{ $item->typeArticle->libelleTypeArticle ?? '' }}</td>
                                 <td>{{ $item->libelleArticle }}</td>
                                 <td>{{ $item->prixUnitaire }}</td>
-                                @php $route = 'route'; echo $controler->crudbody($rub,$srub,$route,'prixes.edit','prixes.destroy'); @endphp
+                                {{-- @php $route = 'route'; echo $controler->crudbody($rub,$srub,$route,'prixes.edit','prixes.destroy'); @endphp --}}
                             </tr>
                         @endforeach
                     </tbody>
