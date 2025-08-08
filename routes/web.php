@@ -310,6 +310,10 @@ Route::get('getFournisseurById/{id}', [AjaxController::class, 'getFournisseurByI
 Route::get('getMagasinById/{id}', [AjaxController::class, 'getMagasinById']);
 Route::get('/getArticle/{data}', [AjaxController::class, 'getArticle']);
 Route::get('getLoaderStockById/{id}', [AjaxController::class, 'getLoaderStockById']);
+Route::get('/getTypeArticleById/{id}', [AjaxController::class, 'getTypeArticleById']);  
+Route::get('/getQteRestantById/{id}', [AjaxController::class, 'getQteRestantById']);  
+
+
 
 
 // Route::get('getLocaliteFils/{id}',[AjaxController::class,'getLocalitesFils']);

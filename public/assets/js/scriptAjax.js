@@ -402,6 +402,45 @@ function getDonneesSaisir(url,idLoc,idThematique,anneeCollect,affiche,rub, srub)
             }
     }
 
+    //afficher les infos articles en fonction du type article
+    function getInfosArticle(typeArticle_id){
+        var chemin;
+        var typeArticleId = jQuery('#'+typeArticle_id).val();
+        chemin = "/getTypeArticleById/"+typeArticleId;
+        console.log(chemin);
+        if(typeArticleId){
+            jQuery.ajax({
+                type:"GET",
+                url:chemin,
+                success: function(data) {
+                    console.log(data);
+                    $('#article_id').html(data);    
+                    },
+                error: function(server_response){
+                    Notification('Aucune donnée selectionnée');
+                }
+            });
+        }
+    } 
+
+    //afficher la quantité du stock en fonction de l'article choisi
+    function getInfoQte(article_id){
+        const articleId = jQuery("#"+article_id).val();
+            var chemin = "/getQteRestantById/"+articleId;
+            console.log(chemin);
+            if (articleId) {
+                $.ajax({
+                    url: chemin,
+                    type: 'GET',
+                    success: function(data) {
+                        $('#qteRestant').val(data.quantiteRest);
+                        $('#prixUnitaire').val(data.prixUnit);
+
+                    }
+                });
+            }
+    }
+
     //afficher le stock en fonction du nom du magasin
     function getInfoStock(magasin_id){
         var magasinId= $("#"+magasin_id).val();

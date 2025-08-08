@@ -8,6 +8,7 @@ use App\Models\Indicateur;
 use App\Models\Localite;
 use App\Models\Magasin;
 use App\Models\ModeAchat;
+use App\Models\TypeArticle;
 use App\Models\TypeLocalite;
 use App\Models\TypeStructure;
 use App\Models\ValeurIndicateurStructure;
@@ -31,18 +32,18 @@ class AjaxController extends Controller
     // }
 
 
-    // public function getLocaliteByType($type){
-    //     $typeLocalite = TypeLocalite::find($type);
-    //     $localites = $typeLocalite->localites()->orderBy('localiteLibelle', 'ASC')->get();
-    //     if(count($localites)>0){
-    //         echo '<option value=""></option>';
-    //         foreach($localites as $fil){
-    //             echo '<option  value="'.$fil->localite_id.'">'.$fil->localiteLibelle.'</option>';
-    //         }
-    //     }else{
-    //         echo '<option value="">Aucune '.$typeLocalite->typeLocaliteLibelle.' trouvée</option>';
-    //     }
-    // }
+    public function getLocaliteByType($type){
+        // $typeLocalite = TypeLocalite::find($type);
+        // $localites = $typeLocalite->localites()->orderBy('localiteLibelle', 'ASC')->get();
+        // if(count($localites)>0){
+        //     echo '<option value=""></option>';
+        //     foreach($localites as $fil){
+        //         echo '<option  value="'.$fil->localite_id.'">'.$fil->localiteLibelle.'</option>';
+        //     }
+        // }else{
+        //     echo '<option value="">Aucune '.$typeLocalite->typeLocaliteLibelle.' trouvée</option>';
+        // }
+    }
 
      //afficher le telephone et le numero identifiant du fournisseur en fonction du id de ce dernier
 
@@ -66,6 +67,35 @@ class AjaxController extends Controller
             ]);
         } else {
             return response()->json(['error' => 'Capacité non trouvée'], 404);
+        }
+    }
+
+    public function getQteRestantById($id){
+        $stock_prix= DB::table('stocks AS s')
+                ->join('articles AS a','s.article_id','=','a.article_id')
+                ->where('s.article_id','=',$id)
+                ->select('s.qteRestant','a.prixUnitaire')
+                ->first();
+                if ($stock_prix!==null){
+                    return response()->json([
+                        'quantiteRest' =>$stock_prix-> qteRestant,
+                        'prixUnit'=> $stock_prix->prixUnitaire
+                    ]);
+                }else{
+                     return response()->json(['error' => 'Quantité restante ou prix unitaire non trouvée'], 404);
+                }
+    }
+
+    public function getTypeArticleById($id){
+        $typeArticle = TypeArticle::find($id);
+        $items = $typeArticle->articles()->orderBy('libelleArticle', 'ASC')->get();
+        if(count($items)>0){
+            echo '<option value=""></option>';
+            foreach($items as $pere){
+                echo '<option  value="'.$pere->article_id.'">'.$pere->libelleArticle.'</option>';
+            }
+        }else{
+            echo '<option value="">Aucune '.$typeArticle->libelleArticle.' trouvée</option>';
         }
     }
 

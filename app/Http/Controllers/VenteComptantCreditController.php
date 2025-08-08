@@ -49,19 +49,19 @@ class VenteComptantCreditController extends Controller
         $data_typeArticle= TypeArticle::orderBy('libelleTypeArticle')->get();
         $data_article= Article::orderBy('libelleArticle','asc')->get();
         $data_remise= Remise::orderBy('tauxRemise','asc')->get();
-        $data_taxe= Taxe::orderBy('tauxTva');
+        $data_taxe= Taxe::orderBy('tauxTva','asc')->get();
         $data_modeReglement= ModeReglement::orderBy('libelleModeReglement','asc')->get();
         return view('vente_comptant_credit.create')->with([ 
-             'controler'        =>$this,
-             'rub'              =>$rub,
-             'srub'             =>$srub,
-             'data_typeClient'  =>$data_typeClient,
-             'data_typeVente'   =>$data_typeVente,
-             'data_typeArticle'  =>$data_typeArticle,
-             'data_article'     =>$data_article,
-             'data_remise'  =>$data_remise,
-             'data_taxe'  =>$data_taxe,
-             'data_modeReglement'  =>$data_modeReglement,
+             'controler'            =>$this,
+             'rub'                  =>$rub,
+             'srub'                 =>$srub,
+             'data_typeClient'      =>$data_typeClient,
+             'data_typeVente'       =>$data_typeVente,
+             'data_typeArticle'     =>$data_typeArticle,
+             'data_article'         =>$data_article,
+             'data_remise'          =>$data_remise,
+             'data_taxe'            =>$data_taxe,
+             'data_modeReglement'   =>$data_modeReglement
         ]);
     }
 
@@ -82,6 +82,7 @@ class VenteComptantCreditController extends Controller
                 'mtTvaVente' => ['required','number'],
                 'mtNetVente' => ['required','number'],
                 'modeReglement_id' => 'nullable',
+                'reference' => ['nullable','string','max:255'],
                 'taxe_id' => ['required','number'],
                 'remise_id' => ['required','number'],
                 'delaiReglement_id' => 'nullable',
@@ -123,6 +124,7 @@ class VenteComptantCreditController extends Controller
                 $clientComp->mtTvaVente=$request->mtTvaVente;
                 $clientComp->mtNetVente=$request->mtNetVente;
                 $clientComp->modeReglement_id=$request->modeReglement_id;
+                $clientComp->reference=$request->reference;
                 $clientComp->taxe_id=$request->taxe_id;
                 $clientComp->remise_id=$request->remise_id;
                 $clientComp->save();

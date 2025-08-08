@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id('vente_id');
             $table->date('dateVente');
             $table->string('numRecuVente')->nullable()->unique();
+            $table->string('reference')->nullable();
             $table->double('mtTotalVente');
             $table->double('mtRemiseVente');
             $table->double('mtTvaVente');

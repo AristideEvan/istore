@@ -12,4 +12,8 @@ class TypeArticle extends Model
         'typeArticle',
         'libelleTypeArticle',
     ];
+
+    public function articles(){
+        return $this->hasMany(Article::class,'typeArticle_id');
+    }
 }
