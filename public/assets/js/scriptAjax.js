@@ -442,25 +442,41 @@ function getDonneesSaisir(url,idLoc,idThematique,anneeCollect,affiche,rub, srub)
     }
 
     //afficher le stock en fonction du nom du magasin
+    
     function getInfoStock(magasin_id){
         var magasinId= $("#"+magasin_id).val();
-        var chemin ="/getLoaderStockById/"+magasinId;
-        //alert("Bonjour"+ chemin);
+        var chemin ="/getInfoMagasinById/"+magasinId;
         console.log(chemin);
         if (magasinId) {
                 $.ajax({
                     url: chemin,
                     type: 'GET',
                     success: function(data) {
-                        $('#libelleTypeArticle').val(data.typeArticle);
-                        $('#libelleArticle').val(data.article);
-                        $('#qteRestant').val(data.qte);
-                    }
-                });
-            }
+                    //console.log(data)
+                    if (Array.isArray(data)){
+                        $('#stockBody').html('');
+                        var table=$('#example').DataTable();
+                        table.destroy();
+                        for(const produit of data){
+
+                            $('#stockBody').append('<tr>'+
+                                                        '<td>'+ produit.libelleTypeArticle +'</td>'+
+                                                        '<td>'+ produit.libelleArticle +'</td>'+
+                                                        '<td>'+ produit.qteRestant +'</td>'+
+                                                    '</tr>');
+                            console.log(produit)
+                        }
+                        $('#example').DataTable();  
+                    }              
+            },     
+            });
+        } else{
+        $('#stockBody').html('');
+        }       
     }
 
     //ajouter une ligne article
+
     function getArticleForm(idForm,form_url, affiche){
         var valeurs = $('select[name="'+idForm+'"]').map(function() {
             return $(this).val();

@@ -69,7 +69,7 @@ class AjaxController extends Controller
             return response()->json(['error' => 'Capacité non trouvée'], 404);
         }
     }
-
+    //afficher quantite restante & prix unitaire en fonction de l'article
     public function getQteRestantById($id){
         $stock_prix= DB::table('stocks AS s')
                 ->join('articles AS a','s.article_id','=','a.article_id')
@@ -86,6 +86,36 @@ class AjaxController extends Controller
                 }
     }
 
+    //afficher les articles restants en fonction du magasin selectionné
+    public function getInfoMagasinById($id){
+        if ($id!=="tout"){
+             $infoStock= DB::table('stocks AS s')
+                    ->join('articles AS a','s.article_id','=','a.article_id')
+                    ->join('type_articles AS ta','a.typeArticle_id','=','ta.typeArticle_id')
+                    ->join('ravitaillements AS r','a.article_id','=','r.article_id')
+                    ->join('magasins AS m','r.magasin_id','=','m.magasin_id')
+                    ->where('r.magasin_id','=',$id)
+                    ->distinct()
+                    ->select('ta.libelleTypeArticle','a.libelleArticle','s.qteRestant')
+                    ->get();
+        }else{
+                     $infoStock= DB::table('stocks AS s')
+                    ->join('articles AS a','s.article_id','=','a.article_id')
+                    ->join('type_articles AS ta','a.typeArticle_id','=','ta.typeArticle_id')
+                    ->join('ravitaillements AS r','a.article_id','=','r.article_id')
+                    ->join('magasins AS m','r.magasin_id','=','m.magasin_id')
+                    ->distinct()
+                    ->select('ta.libelleTypeArticle','a.libelleArticle','s.qteRestant')
+                    ->get();
+        }
+                    if($infoStock->isNotEmpty()){
+                        return response()->json($infoStock);
+                    }else{
+                        return response()->json(['error' => 'Aucune donnée'], 404);
+                    }
+    }
+
+    //afficher un article en fonction d'un type article choisi
     public function getTypeArticleById($id){
         $typeArticle = TypeArticle::find($id);
         $items = $typeArticle->articles()->orderBy('libelleArticle', 'ASC')->get();

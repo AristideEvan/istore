@@ -312,8 +312,7 @@ Route::get('/getArticle/{data}', [AjaxController::class, 'getArticle']);
 Route::get('getLoaderStockById/{id}', [AjaxController::class, 'getLoaderStockById']);
 Route::get('/getTypeArticleById/{id}', [AjaxController::class, 'getTypeArticleById']);  
 Route::get('/getQteRestantById/{id}', [AjaxController::class, 'getQteRestantById']);  
-
-
+Route::get('/getInfoMagasinById/{id}', [AjaxController::class, 'getInfoMagasinById']); 
 
 
 // Route::get('getLocaliteFils/{id}',[AjaxController::class,'getLocalitesFils']);
@@ -478,7 +477,7 @@ Route::get('stocks/{rub}/{srub}', [StockController::class, 'index']);
 //Route prix
 Route::resource('prixes', PrixController::class);
 Route::get('prixes/{rub}/{srub}', [PrixController::class, 'index']);
-//Route::get('prixes/create/{rub}/{srub}', [PrixController::class, 'create']);
+Route::get('prixes/create/{rub}/{srub}', [PrixController::class, 'create']);
 Route::get('prixes/{id}/edit/{rub}/{srub}', [PrixController::class, 'edit']);
 
 //Route client
