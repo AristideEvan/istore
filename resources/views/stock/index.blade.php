@@ -38,6 +38,7 @@
                         </tr>
                     </thead>
                     <tbody id="stockBody">
+                        {{-- affichage des quantités restantes --}}
                     </tbody>
                 </table>
             </div>

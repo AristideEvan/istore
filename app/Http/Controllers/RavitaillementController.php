@@ -157,8 +157,8 @@ class RavitaillementController extends Controller
     {
        $request->validate([
             'dateRavi' =>['required','date'],
-            'qteRavi' => ['required', 'numeric', 'min:0'],
-            'prixAchatRavi' => ['nullable', 'numeric', 'min:0'],
+            'qteRavi' => ['required', 'numeric'],
+            'prixAchatRavi' => ['nullable', 'numeric'],
             //'pointVente_id' => ['required'],
             'article_id' => ['required'],
             'fournisseur_id'=>['required'],

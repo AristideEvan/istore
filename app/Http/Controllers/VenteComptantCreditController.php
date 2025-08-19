@@ -28,9 +28,12 @@ class VenteComptantCreditController extends Controller
 
     public function index($rub,$srub)
     {
-        $datas = VenteComptantCredit::with('article')
-        ->orderBy('dateVente', 'desc')
-        ->get();
+        $datas = VenteComptantCredit::with( 'ligneVente_vente',
+                                            'ligneVente_typeVente',
+                                            'ligneVente_client.typeClient',
+                                            'ligneVente_article')
+                ->orderBy('created_at','DESC')                            
+                ->get();
         return view('vente_comptant_credit.index', [
             'datas'     => $datas,
             'controler' => $this,
@@ -70,37 +73,32 @@ class VenteComptantCreditController extends Controller
      */
     public function store(Request $request)
     {
+        //dd(request());
         DB::beginTransaction();
         try {
             $request->validate([
-                
-                //vente comptant ou credit
+                //vente comptant ou Ventecredit
                 'dateVente' => ['required','date'],
                 'numRecuVente'=> ['nullable','string','max:255'],
-                'mtTotalVente'=> ['required','number'],
-                'mtRemiseVente' => ['required','number'],
-                'mtTvaVente' => ['required','number'],
-                'mtNetVente' => ['required','number'],
+                'mtTotalVente'=> ['required','numeric'],
+                'mtRemiseVente' => ['required','numeric'],
+                'mtTvaVente' => ['required','numeric'],
+                'mtNetVente' => ['required','numeric'],
                 'modeReglement_id' => 'nullable',
                 'reference' => ['nullable','string','max:255'],
-                'taxe_id' => ['required','number'],
-                'remise_id' => ['required','number'],
+                'taxe_id' => ['required','numeric'],
+                'remise_id' => ['required','numeric'],
                 'delaiReglement_id' => 'nullable',
 
                 //lignes de vente
-                'qteVente' =>['required','number'],
-                'prixVente' =>['required','number'],
-                'mtHtVente'=>['required','number'],
+                'qteVente' =>['required','numeric'],
+                'prixVente' =>['nullable','numeric'],
+                'mtHtVente'=>['required','numeric'],
                 'article_id'=>['required'],
                 'client_id'=>['required'],
                 'typeVente_id'=>['required'],
-                'vente_id'=>['required'],
-
-
+                
                 //recettes
-                'dateRecette' => ['required','date'],
-                'mtRecette' => ['required','number'],
-                'vente_id' => 'nullable',
                 'reglement_id' => 'nullable'
 
              ]);
@@ -137,21 +135,20 @@ class VenteComptantCreditController extends Controller
                 $ligneComp->article_id= $request->article_id;
                 $ligneComp->client_id= $request->client_id;
                 $ligneComp->typeVente_id= $request->typeVente_id;
+                //recuperer id de vente_id à partir de la table vente_comptant_credits
                 $venteCompId = DB::table('vente_comptant_credits')
-                        ->where('vente_id',$request->vente_id); 
+                                ->orderBy('vente_id','DESC')
+                                ->value('vente_id'); 
                 $ligneComp->vente_id= $venteCompId;
                 $ligneComp->save();
 
                 //table recette
                 $recette =new Recette();
-                $recette->dateRecette= $request->dateRecette;
-                $recette->mtRecette= $request->mtRecette;
-                $venteComId = DB::table('vente_comptant_credits')
-                        ->where('vente_id',$request->vente_id);
-                $recette->vente_id= $venteComId;
+                $recette->dateRecette= $request->dateVente;
+                $recette->mtRecette= $request->mtNetVente;
+                $recette->vente_id= $venteCompId;
                 $recette->save();
-            }
-            
+            }  
             DB::commit();
         }
         catch (\Exception $e) {

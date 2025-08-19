@@ -312,7 +312,11 @@ Route::get('/getArticle/{data}', [AjaxController::class, 'getArticle']);
 Route::get('getLoaderStockById/{id}', [AjaxController::class, 'getLoaderStockById']);
 Route::get('/getTypeArticleById/{id}', [AjaxController::class, 'getTypeArticleById']);  
 Route::get('/getQteRestantById/{id}', [AjaxController::class, 'getQteRestantById']);  
-Route::get('/getInfoMagasinById/{id}', [AjaxController::class, 'getInfoMagasinById']); 
+Route::get('/getInfoMagasinById/{id}', [AjaxController::class, 'getInfoMagasinById']);
+Route::get('/getInfoClientByTypeId/{id}', [AjaxController::class, 'getInfoClientByTypeId']); 
+Route::get('/getTypeArticleByArticle/{id}', [AjaxController::class, 'getTypeArticleByArticle']); 
+
+
 
 
 // Route::get('getLocaliteFils/{id}',[AjaxController::class,'getLocalitesFils']);

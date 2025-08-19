@@ -85,7 +85,7 @@ class PrixController extends Controller
     public function update(Request $request,$id)
     {
         $request->validate([
-            'prixUnitaire' =>['required','number'],
+            'prixUnitaire' =>['required','numeric'],
         ]);
         
         DB::beginTransaction();

@@ -146,17 +146,21 @@ class AjaxController extends Controller
             
     }
 
+    //afficher les identites d'un client en fonction de son type client
+    public function getInfoClientByTypeId($id){
+        $nom= DB::table('clients AS c')
+                ->join('type_clients AS tc','c.typeClient_id','=','tc.typeClient_id')
+                ->where('tc.typeClient_id','=',$id)
+                ->select('c.client_id','c.nomClient','c.prenomClient','c.telephoneClient')
+                ->get();
+              if ($nom->isNotEmpty()){
+                 return response()->json($nom);
+              }else{
+                return response()->json(['error' => 'Aucune donnée'], 404);
+              } 
+    }
 
-    // public function addLineItems($id){
-    //     $modeAchat=ModeAchat::orderBy('libelleModeAchat','ASC')->get();
-    //     $article_id=DB::select('SELECT * FROM articles WHERE article_id NOT IN (SELECT article_id FROM ravitaillements WHERE article_id ='.$id.')');
-    //     return view('')->with([
-    //         'modeAchat'=>$modeAchat,
-    //         'article_id'=>$article_id
-    //     ]);
-    // }
-
-
+    //fonction qui permet de ne pas repeter 2 fois un article dans la liste deroulante. formulaire : Ravitaillement
     public function getArticle($data){
         $data_modeAchat = ModeAchat::orderBy('libelleModeAchat','asc')->get();
         $articles=DB::select('SELECT * FROM articles WHERE article_id NOT IN ('.$data.')');
@@ -166,7 +170,18 @@ class AjaxController extends Controller
             'data_article'=>$articles,
             'key'=>$key
         ]);
-        //dd($articles);
+    }
+
+    //afficher article en fonction du type article formulaire : vente_comptant_credit
+    public function getTypeArticleByArticle($id){
+        $data_typeArticle= TypeArticle::orderBy('libelleTypeArticle','ASC')->get();
+        $articles = DB::select('SELECT * FROM articles WHERE article_id NOT IN ('.$id.')');
+        $key =$this->genererNom();
+        return view('vente_comptant_credit.formArticle')->with([
+                        'data_typeArticle' => $data_typeArticle,
+                        'data_article'     => $articles,
+                        'key'              => $key
+        ]);
     }
 
     // public function getStructure($typeStructureId){
