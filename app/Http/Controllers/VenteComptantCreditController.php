@@ -47,9 +47,9 @@ class VenteComptantCreditController extends Controller
      */
     public function create($rub,$srub)
     {
-        $data_typeClient=TypeClient::orderBy('libelleTypeClient')->get();
-        $data_typeVente = TypeVente::orderBy('libelleTypeVente')->get();
-        $data_typeArticle= TypeArticle::orderBy('libelleTypeArticle')->get();
+        $data_typeClient=TypeClient::orderBy('libelleTypeClient','asc')->get();
+        $data_typeVente = TypeVente::orderBy('libelleTypeVente','asc')->get();
+        $data_typeArticle= TypeArticle::orderBy('libelleTypeArticle','asc')->get();
         $data_article= Article::orderBy('libelleArticle','asc')->get();
         $data_remise= Remise::orderBy('tauxRemise','asc')->get();
         $data_taxe= Taxe::orderBy('tauxTva','asc')->get();

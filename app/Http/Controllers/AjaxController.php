@@ -115,10 +115,11 @@ class AjaxController extends Controller
                     }
     }
 
-    //afficher un article en fonction d'un type article choisi
-    public function getTypeArticleById($id){
+    //afficher un article en fonction d'un type article choisi formulaire : ravitaillement
+    public function getTypeArticleById($id,$data){
         $typeArticle = TypeArticle::find($id);
-        $items = $typeArticle->articles()->orderBy('libelleArticle', 'ASC')->get();
+        //$items = $typeArticle->articles()-> ->orderBy('libelleArticle', 'ASC')->get();
+        $items = DB::select('SELECT * FROM articles WHERE "typeArticle_id"='.$id.' AND article_id NOT IN ('.$data.')');
         if(count($items)>0){
             echo '<option value=""></option>';
             foreach($items as $pere){
@@ -183,6 +184,8 @@ class AjaxController extends Controller
                         'key'              => $key
         ]);
     }
+
+    
 
     // public function getStructure($typeStructureId){
     //     $typeStructure=TypeStructure::find($typeStructureId);

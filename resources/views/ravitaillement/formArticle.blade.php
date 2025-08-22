@@ -1,7 +1,7 @@
 <div class="row g-3 align-items-end pt-4" id="item_{{$key}}">
     <div class="col-md-5">
         <label for="article_id[]">Nom article <span class="text-danger">*</span></label>
-        <select name="article_id[]" class="form-control" id="art_{{$key}}" required>
+        <select name="article_id[]" class="form-control" id="article_{{$key}}" required>
             <option value="">-- Sélectionner --</option>
             @foreach($data_article as $items)
                 <option value="{{ $items->article_id }}">

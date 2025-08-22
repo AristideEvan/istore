@@ -402,7 +402,7 @@ function getDonnees(url,id,affiche){
             }
     }
 
-    //afficher les infos articles en fonction du type article
+    //afficher les infos articles en fonction du type article : ravitaillement
     function getInfosArticle(typeArticle_id){
         var chemin;
         var typeArticleId = jQuery('#'+typeArticle_id).val();
@@ -423,8 +423,39 @@ function getDonnees(url,id,affiche){
         }
     } 
 
+    //afficher les infos articles en fonction du type article : vente_comptant_credit
+    function getArticleByType(idForm,typeArticle_id,key){
+        var chemin;
+        var typeArticleId = jQuery('#'+typeArticle_id).val();
+        var valeurs = $('select[name="'+idForm+'"]').map(function() {
+            return $(this).val();
+        }).get();
+
+        console.log(valeurs.length);
+        if(valeurs[0]==""){
+            valeurs = 0;
+        }else{
+            valeurs +=0;
+        }
+        chemin = "/getTypeArticleById/"+typeArticleId+"/"+valeurs;
+        console.log(chemin);
+        if(typeArticleId){
+            jQuery.ajax({
+                type:"GET",
+                url:chemin,
+                success: function(data) {
+                    console.log(data);
+                    $('#article_'+key).html(data);    
+                    },
+                error: function(server_response){
+                    Notification('Aucune donnée selectionnée');
+                }
+            });
+        }
+    } 
+
     //afficher la quantité du stock en fonction de l'article choisi
-    function getInfoQte(article_id){
+    function getInfoQte(article_id,key){
         const articleId = jQuery("#"+article_id).val();
             var chemin = "/getQteRestantById/"+articleId;
             console.log(chemin);
@@ -433,14 +464,14 @@ function getDonnees(url,id,affiche){
                     url: chemin,
                     type: 'GET',
                     success: function(data) {
-                        $('#qteRestant').val(data.quantiteRest);
-                        $('#prixVente').val(data.prixUnit);
+                        $('#qteRestant_'+key).val(data.quantiteRest);
+                        $('#prixVente_'+key).val(data.prixUnit);
                     }
                 });
             }
     }
 
-    //afficher les identifiants des clients en fonction de son type client
+    //afficher les identifiants des clients en fonction de son type client 
     function getInfoClient(typeClient_id){
         const typeClientId= jQuery("#"+typeClient_id).val();
         var chemin ="/getInfoClientByTypeId/"+typeClientId;
@@ -491,11 +522,14 @@ function getDonnees(url,id,affiche){
         }     
     }
 
-    //ajouter une ligne article formulaire : ravitaillement : vente_comptant_credit
+    //ajouter une ligne article formulaire : 
+    // ravitaillement 
+    // vente_comptant_credit
     function getArticleForm(idForm,form_url, affiche){
         var valeurs = $('select[name="'+idForm+'"]').map(function() {
             return $(this).val();
         }).get();
+        console.log(valeurs);
         $.ajax({
             url : form_url+"/"+valeurs,
             type: 'GET',

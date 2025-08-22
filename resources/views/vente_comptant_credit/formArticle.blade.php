@@ -1,8 +1,10 @@
 
-    <div class="row" id="item_{{$key}}">
+    <div class="row g-3 align-items-end pt-4" id="item_{{$key}}">
+
         <div class="col-md-3">
-            <label for="typeArticle_id">{{ __('Type article')}} <span style="color: red">*</span></label>
-                <select name="typeArticle_id[]" id="typeArticle_{{$key}}" class="form-control" onchange="getInfosArticle(this.id)" id="typeArticle_{{$key}}" required>
+            <label for="typeArticle_id[]">{{ __('Type article')}} <span style="color: red">*</span></label>
+                <select name="typeArticle_id[]" id="typeArticle_{{$key}}" class="form-control" onchange="getArticleByType('article_id[]',this.id,'{{$key}}')" required>
+                    <option value="">-- Sélectionner --</option>
                     @foreach($data_typeArticle as $items)
                         <option value="{{ $items->typeArticle_id }}">
                             {{ $items->libelleTypeArticle }}
@@ -19,8 +21,8 @@
                 @enderror
         </div>
         <div class="col-md-3">
-            <label for="article_id">{{ __('Nom article')}} <span style="color: red">*</span></label>
-                <select name="article_id[]" class="form-control" id="article_{{$key}}" onchange="getInfoQte(this.id)" required>
+            <label for="article_id[]">{{ __('Nom article')}} <span style="color: red">*</span></label>
+                <select name="article_id[]" class="form-control" id="article_{{$key}}" onchange="getInfoQte(this.id,'{{$key}}')" required>
                     <option value="">-- Sélectionner --</option>
                         @foreach($data_article as $items)
                             <option value="{{ $items->article_id }}">
@@ -31,7 +33,7 @@
                 <div class="invalid-feedback">
                     {{__('formulaire.Obligation')}}
                 </div>
-                @error('article_id[]')
+                @error('article_id')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>
@@ -84,7 +86,7 @@
                     <strong>{{ $message }}</strong>
                 </span>
             @enderror   
-        </div><br>
+        </div>
         <div class="col-md-1">
             <a href="#" class="btn btn-danger" onclick="removeElem('item_{{$key}}')"><i class="fas fa-trash"></i></a>
         </div>

@@ -95,98 +95,98 @@
                             {{-- Bloc articles --}}
                             <fieldset class="border p-3 mb-2 position-relative">
                                 <legend class="position-absolute top-0 start-0 translate-middle-y bg-white px-2" style="font-size: 1rem;">{{__('Informations articles')}}</legend>
-                                <div id="zoneArticle">
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                            <label for="typeArticle_id">{{ __('Type article')}} <span style="color: red">*</span></label>
-                                                <select name="typeArticle_id[]" class="form-control" onchange="getInfosArticle(this.id)" id="typeArticle_id" required>
-                                                    <option value="">-- Sélectionner --</option>
-                                                    @foreach($data_typeArticle as $items)
-                                                        <option value="{{ $items->typeArticle_id }}">
-                                                            {{ $items->libelleTypeArticle }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
+                                    <div id="zoneArticle">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <label for="typeArticle_id[]">{{ __('Type article')}} <span style="color: red">*</span></label>
+                                                    <select name="typeArticle_id[]" class="form-control" onchange="getArticleByType('article_id[]',this.id,'0')" id="typeArticle_id" required>
+                                                        <option value="">-- Sélectionner --</option>
+                                                        @foreach($data_typeArticle as $items)
+                                                            <option value="{{ $items->typeArticle_id }}">
+                                                                {{ $items->libelleTypeArticle }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                    <div class="invalid-feedback">
+                                                        {{__('formulaire.Obligation')}}
+                                                    </div>
+                                                    @error('typeArticle_id')
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                    @enderror
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label for="article">{{ __('Nom article')}} <span style="color: red">*</span></label>
+                                                    <select name="article_id[]" class="form-control" id="article_0" onchange="getInfoQte(this.id,'0')" required>
+                                                        <option value="">-- Sélectionner --</option>
+                                                        @foreach($data_article as $items)
+                                                            <option value="{{ $items->article_id }}">
+                                                                {{ $items->libelleArticle }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                    <div class="invalid-feedback">
+                                                        {{__('formulaire.Obligation')}}
+                                                    </div>
+                                                    @error('article_id[]')
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                    @enderror
+                                            </div>
+                                            <div class="col-md-1">
+                                                <label for="qteRestant">{{ __('Qte rest')}}</label>
+                                                <input type="number" id="qteRestant_0" name="qteRestant[]" class="form-control">
                                                 <div class="invalid-feedback">
                                                     {{__('formulaire.Obligation')}}
                                                 </div>
-                                                @error('typeArticle_id')
+                                                @error('qteRestant')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
                                                     </span>
-                                                @enderror
-                                        </div>
-                                        <div class="col-md-3">
-                                            <label for="article_id">{{ __('Nom article')}} <span style="color: red">*</span></label>
-                                                <select name="article_id[]" class="form-control" id="article_id"  onchange="getInfoQte(this.id)" required>
-                                                    <option value="">-- Sélectionner --</option>
-                                                    @foreach($data_article as $items)
-                                                        <option value="{{ $items->article_id }}">
-                                                            {{ $items->libelleArticle }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
+                                                @enderror   
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label for="prixVente">{{ __('PU Vente')}}</label>
+                                                <input type="number" id="prixVente_0" name="prixVente[]" class="form-control">
                                                 <div class="invalid-feedback">
                                                     {{__('formulaire.Obligation')}}
                                                 </div>
-                                                @error('article_id[]')
+                                                @error('prixVente')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
                                                     </span>
-                                                @enderror
-                                        </div>
-                                        <div class="col-md-1">
-                                            <label for="qteRestant">{{ __('Qte rest')}}</label>
-                                            <input type="number" id="qteRestant" name="qteRestant[]" class="form-control">
-                                            <div class="invalid-feedback">
-                                                {{__('formulaire.Obligation')}}
+                                                @enderror    -
                                             </div>
-                                            @error('qteRestant')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror   
-                                        </div>
-                                        <div class="col-md-2">
-                                            <label for="prixVente">{{ __('PU Vente')}}</label>
-                                            <input type="number" id="prixVente" name="prixVente[]" class="form-control">
-                                            {{-- <div class="invalid-feedback">
-                                                {{__('formulaire.Obligation')}}
+                                            <div class="col-md-1">
+                                                <label for="qteVente">{{ __('Qte Sor')}}<span style="color: red">*</span></label>
+                                                <input type="number" id="qteVente_0" name="qteVente[]" class="form-control">
+                                                <div class="invalid-feedback">
+                                                    {{__('formulaire.Obligation')}}
+                                                </div>
+                                                @error('qteVente')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror   
                                             </div>
-                                            @error('prixVente')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror    --}}
-                                        </div>
-                                        <div class="col-md-1">
-                                            <label for="qteVente">{{ __('Qte Sor')}}<span style="color: red">*</span></label>
-                                            <input type="number" id="qteVente" name="qteVente[]" class="form-control">
-                                            <div class="invalid-feedback">
-                                                {{__('formulaire.Obligation')}}
+                                            <div class="col-md-2">
+                                                <label for="mtHtVente">{{ __('Montant')}}</label>
+                                                <input type="mtHtVente" id="mtHtVente_0" name="mtHtVente[]" class="form-control">
+                                                <div class="invalid-feedback">
+                                                    {{__('formulaire.Obligation')}}
+                                                </div>
+                                                @error('mtHtVente')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror   
                                             </div>
-                                            @error('qteVente')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror   
-                                        </div>
-                                        <div class="col-md-2">
-                                            <label for="mtHtVente">{{ __('Montant')}}</label>
-                                            <input type="mtHtVente" id="mtHtVente" name="mtHtVente[]" class="form-control">
-                                            <div class="invalid-feedback">
-                                                {{__('formulaire.Obligation')}}
-                                            </div>
-                                            @error('mtHtVente')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror   
                                         </div>
                                     </div>
-                                </div>
                                 <a href="#" class="btn btn-primary" onclick="getArticleForm('article_id[]','/getTypeArticleByArticle','zoneArticle')"><i class="fas fa-plus"></i></a>
-                            </fieldset><br>
+                            </fieldset>
 
                             {{-- Bloc Infos Montants --}}
                            <fieldset class="border p-3 mb-2 position-relative">
