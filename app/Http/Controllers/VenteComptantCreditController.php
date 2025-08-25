@@ -73,6 +73,117 @@ class VenteComptantCreditController extends Controller
      */
     public function store(Request $request)
     {
+            DB::beginTransaction();
+            try {
+                $request->validate([
+                    // Vente
+                    'dateVente' => ['required','date'],
+                    'numRecuVente'=> ['nullable','string','max:255'],
+                    'mtTotalVente'=> ['required','numeric'],
+                    'mtRemiseVente' => ['required','numeric'],
+                    'mtTvaVente' => ['required','numeric'],
+                    'mtNetVente' => ['required','numeric'],
+                    'modeReglement_id' => 'nullable',
+                    'reference' => ['nullable','string','max:255'],
+                    'taxe_id' => ['required','numeric'],
+                    'remise_id' => ['required','numeric'],
+                    'delaiReglement_id' => 'nullable',
+
+                    // lignes de ventes 
+                    'article_id'   => ['required','array'],
+                    //'article_id.*' => ['required','numeric'],
+                    'qteVente'     => ['required','array'],
+                    //'qteVente.*'   => ['required','numeric'],
+                    'prixVente'    => ['required','array'],
+                   // 'prixVente.*'  => ['nullable','numeric'],
+                    'mtHtVente'    => ['required','array'],
+                    //'mtHtVente.*'  => ['required','numeric'],
+
+                    'client_id'=>['required','numeric'],
+                    'typeVente_id'=>['required','numeric'],
+                ]);
+
+                // table  vente comptant credit
+                $clientComp = new VenteComptantCredit();
+                $clientComp->dateVente      = $request->dateVente;
+                $clientComp->numRecuVente   = $request->numRecuVente;
+                $clientComp->mtTotalVente   = $request->mtTotalVente;
+                $clientComp->mtRemiseVente  = $request->mtRemiseVente;
+                $clientComp->mtTvaVente     = $request->mtTvaVente;
+                $clientComp->mtNetVente     = $request->mtNetVente;
+                $clientComp->modeReglement_id = $request->modeReglement_id;
+                $clientComp->reference      = $request->reference;
+                $clientComp->taxe_id        = $request->taxe_id;
+                $clientComp->remise_id      = $request->remise_id;
+                $clientComp->save();
+
+                //recuperer id de vente_id à partir de la table vente_comptant_credits
+                $venteCompId = DB::table('vente_comptant_credits')
+                                ->orderBy('vente_id','DESC')
+                                ->value('vente_id'); 
+
+                //table ligne vente
+                // Boucle sur les lignes articles
+                foreach ($request->article_id as $key => $articleId) {
+                    $ligneComp = new LigneVente();
+                    $ligneComp->qteVente    = $request->qteVente[$key];
+                    $ligneComp->prixVente   = $request->prixVente[$key];
+                    $ligneComp->mtHtVente   = $request->mtHtVente[$key];
+                    $ligneComp->article_id  = $articleId;
+                    $ligneComp->client_id   = $request->client_id;
+                    $ligneComp->typeVente_id= $request->typeVente_id;
+                    $ligneComp->vente_id    = $venteCompId;
+                    $ligneComp->save();
+                }
+
+                // table recette
+                $recette = new Recette();
+                $recette->dateRecette = $request->dateVente;
+                $recette->mtRecette   = $request->mtNetVente;
+                $recette->vente_id    = $venteCompId;
+                $recette->save();
+                DB::commit();
+
+            } catch (\Exception $e) {
+                DB::rollBack();
+                return back()->with(['error' => $e->getMessage()]);
+            }
+            return redirect('venteComptantCredits/'.$request->input('rub').'/'.$request->input('srub'))->with(['success'=>$this->msgSuccess]);
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        //
+    }
+
+    function save(Request $request){
         //dd(request());
         DB::beginTransaction();
         try {
@@ -103,11 +214,12 @@ class VenteComptantCreditController extends Controller
 
              ]);
 
-            //IF TYPECLIENT === CLIENT CREDIT
+            
             $typeClient = DB::table('type_clients')
                         ->where('typeClient_id',$request->typeClient_id) 
                         ->value('libelleTypeClient');
-
+                        
+            //IF TYPECLIENT === CLIENT CREDIT
             if ($typeClient === 'CLIENT CREDIT'){
                 $clientCred= new VenteComptantCredit();
                
@@ -157,37 +269,5 @@ class VenteComptantCreditController extends Controller
                return back()->with(['error'=>$msgError]);
             }
          return redirect('venteComptantCredits/'.$request->input('rub').'/'.$request->input('srub'))->with(['success'=>$this->msgSuccess]);
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
     }
 }

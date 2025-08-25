@@ -97,7 +97,7 @@
                                 <legend class="position-absolute top-0 start-0 translate-middle-y bg-white px-2" style="font-size: 1rem;">{{__('Informations articles')}}</legend>
                                     <div id="zoneArticle">
                                         <div class="row">
-                                            <div class="col-md-3">
+                                            <div class="col-md-2">
                                                 <label for="typeArticle_id[]">{{ __('Type article')}} <span style="color: red">*</span></label>
                                                     <select name="typeArticle_id[]" class="form-control" onchange="getArticleByType('article_id[]',this.id,'0')" id="typeArticle_id" required>
                                                         <option value="">-- Sélectionner --</option>
@@ -120,11 +120,7 @@
                                                 <label for="article">{{ __('Nom article')}} <span style="color: red">*</span></label>
                                                     <select name="article_id[]" class="form-control" id="article_0" onchange="getInfoQte(this.id,'0')" required>
                                                         <option value="">-- Sélectionner --</option>
-                                                        @foreach($data_article as $items)
-                                                            <option value="{{ $items->article_id }}">
-                                                                {{ $items->libelleArticle }}
-                                                            </option>
-                                                        @endforeach
+                                                        {{-- liste des articles --}}
                                                     </select>
                                                     <div class="invalid-feedback">
                                                         {{__('formulaire.Obligation')}}
@@ -137,7 +133,7 @@
                                             </div>
                                             <div class="col-md-1">
                                                 <label for="qteRestant">{{ __('Qte rest')}}</label>
-                                                <input type="number" id="qteRestant_0" name="qteRestant[]" class="form-control">
+                                                <input type="number" id="qteRestant_0" name="qteRestant[]" class="form-control" readonly>
                                                 <div class="invalid-feedback">
                                                     {{__('formulaire.Obligation')}}
                                                 </div>
@@ -149,7 +145,7 @@
                                             </div>
                                             <div class="col-md-2">
                                                 <label for="prixVente">{{ __('PU Vente')}}</label>
-                                                <input type="number" id="prixVente_0" name="prixVente[]" class="form-control">
+                                                <input type="number" id="prixVente_0" name="prixVente[]" class="form-control" onchange="getMontantByQtePU(this.id,'0')">
                                                 <div class="invalid-feedback">
                                                     {{__('formulaire.Obligation')}}
                                                 </div>
@@ -157,11 +153,11 @@
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
                                                     </span>
-                                                @enderror    -
+                                                @enderror  
                                             </div>
                                             <div class="col-md-1">
                                                 <label for="qteVente">{{ __('Qte Sor')}}<span style="color: red">*</span></label>
-                                                <input type="number" id="qteVente_0" name="qteVente[]" class="form-control">
+                                                <input type="number" id="qteVente_0" name="qteVente[]" class="form-control" onchange="getMontantByQtePU(this.id,'0')">
                                                 <div class="invalid-feedback">
                                                     {{__('formulaire.Obligation')}}
                                                 </div>
@@ -172,8 +168,8 @@
                                                 @enderror   
                                             </div>
                                             <div class="col-md-2">
-                                                <label for="mtHtVente">{{ __('Montant')}}</label>
-                                                <input type="mtHtVente" id="mtHtVente_0" name="mtHtVente[]" class="form-control">
+                                                <label for="mtHtVente">{{ __('Montant total')}}</label>
+                                                <input type="mtHtVente" id="mtHtVente_0" readonly name="mtHtVente[]" class="form-control">
                                                 <div class="invalid-feedback">
                                                     {{__('formulaire.Obligation')}}
                                                 </div>
@@ -194,7 +190,7 @@
                                 <div class="row">
                                     <div class="col-md-2">
                                         <label for="mtTotalVente">{{ __('Montant brut')}}</label>
-                                                <input type="number" id="mtTotalVente" name="mtTotalVente" class="form-control">
+                                                <input type="number" id="mtTotalVente" name="mtTotalVente" class="form-control readonly" readonly>
                                                 <div class="invalid-feedback">
                                                     {{__('formulaire.Obligation')}}
                                                 </div>
@@ -206,7 +202,7 @@
                                     </div>
                                     <div class="col-md-2">
                                         <label for="remise_id">{{ __('Taux remise')}}<span style="color: red">*</span></label>
-                                                <select name="remise_id" class="form-select" id="remise_id" required>
+                                                <select name="remise_id" class="form-select" id="remise" onchange="tauxRemise(this.id)" required>
                                                     <option value="">-- Sélectionner --</option>
                                                     @foreach($data_remise as $items)
                                                         <option value="{{ $items->remise_id }}">
@@ -225,7 +221,7 @@
                                     </div>
                                     <div class="col-md-2">
                                         <label for="mtRemiseVente">{{ __('Montant remise')}}</label>
-                                                <input type="number" id="mtRemiseVente" name="mtRemiseVente" class="form-control">
+                                                <input type="number" id="mtRemiseVente" name="mtRemiseVente" class="form-control" readonly>
                                                 <div class="invalid-feedback">
                                                     {{__('formulaire.Obligation')}}
                                                 </div>
@@ -237,7 +233,7 @@
                                     </div>
                                     <div class="col-md-2">
                                         <label for="taxe_id">{{ __('Taux TVA')}}<span style="color: red">*</span></label>
-                                                <select name="taxe_id" class="form-select" id="taxe_id" required>
+                                                <select name="taxe_id" class="form-select" id="taxe" onchange="tauxTaxe(this.id)" required>
                                                     <option value="#">-- Sélectionner --</option>
                                                     @foreach($data_taxe as $items)
                                                         <option value="{{ $items->taxe_id }}">
@@ -256,7 +252,7 @@
                                     </div>
                                     <div class="col-md-2">
                                         <label for="mtTvaVente">{{ __('Montant TVA')}}</label>
-                                                <input type="number" id="mtTvaVente" name="mtTvaVente" class="form-control">
+                                                <input type="number" id="mtTvaVente" name="mtTvaVente" class="form-control" readonly>
                                                 <div class="invalid-feedback">
                                                     {{__('formulaire.Obligation')}}
                                                 </div>
@@ -268,7 +264,7 @@
                                     </div>
                                      <div class="col-md-2">
                                         <label for="mtNetVente">{{ __('Montant net payer')}}</label>
-                                                <input type="number" id="mtNetVente" name="mtNetVente" class="form-control">
+                                                <input type="number" id="mtNetVente" name="mtNetVente" class="form-control" readonly>
                                                 <div class="invalid-feedback">
                                                     {{__('formulaire.Obligation')}}
                                                 </div>
@@ -342,6 +338,9 @@
         max-width: 300px; /* ou toute valeur */
     }
 </style>
+
 @endsection
+
+
 
 

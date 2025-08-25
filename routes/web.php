@@ -313,9 +313,13 @@ Route::get('getLoaderStockById/{id}', [AjaxController::class, 'getLoaderStockByI
 Route::get('/getTypeArticleById/{id}', [AjaxController::class, 'getTypeArticleById']);  
 Route::get('/getQteRestantById/{id}', [AjaxController::class, 'getQteRestantById']);  
 Route::get('/getInfoMagasinById/{id}', [AjaxController::class, 'getInfoMagasinById']);
-Route::get('/getInfoClientByTypeId/{id}', [AjaxController::class, 'getInfoClientByTypeId']); 
+Route::get('/getTypeClientByClient/{id}', [AjaxController::class, 'getTypeClientByClient']); 
 Route::get('/getTypeArticleByArticle/{id}', [AjaxController::class, 'getTypeArticleByArticle']); 
 Route::get('/getTypeArticleById/{typeArticle_id}/{data}',[AjaxController::class,'getTypeArticleById']);
+Route::get('/getTauxRemise/{id}', [AjaxController::class, 'getTauxRemise']); 
+Route::get('/getTauxTaxe/{id}', [AjaxController::class, 'getTauxTaxe']); 
+
+
 
 
 

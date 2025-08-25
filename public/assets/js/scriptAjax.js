@@ -430,7 +430,6 @@ function getDonnees(url,id,affiche){
         var valeurs = $('select[name="'+idForm+'"]').map(function() {
             return $(this).val();
         }).get();
-
         console.log(valeurs.length);
         if(valeurs[0]==""){
             valeurs = 0;
@@ -454,7 +453,92 @@ function getDonnees(url,id,affiche){
         }
     } 
 
-    //afficher la quantité du stock en fonction de l'article choisi
+    //calculer montant <---- prix unitaire vente * quantite
+    // vente_comptant_credit
+    function getMontantByQtePU(index){
+        const key = index.split("_")[1];
+        const qte  = parseFloat(jQuery('#qteVente_' + key).val());
+        const prix  = parseFloat(jQuery('#prixVente_' + key).val());
+        som=0;
+        if (qte && prix){
+            console.log(prix,qte);
+            const montant = prix * qte;
+            console.log(montant);
+            jQuery("#mtHtVente_" + key).val(montant.toFixed(2));
+            //appel de fonction
+            cumulTotalVente();
+        }
+    }
+
+    //calculer le cumul montant brut
+    //vente_comptant_credit
+    function cumulTotalVente() {
+        let som = 0;
+        $('[id^="mtHtVente_"]').each(function () {
+            let val = parseFloat($(this).val());
+            if (!isNaN(val)) {
+                som += val;
+            }
+        });
+        $("#mtTotalVente").val(som.toFixed(2));
+    }
+
+    //calculer taux de remise
+    //vente_comptant_credit
+    function tauxRemise(remise){
+        const remiseId  = parseFloat($('#'+remise).val());
+        var chemin ="/getTauxRemise/"+ remiseId;
+        console.log(chemin);
+        if (remiseId) {
+                $.ajax({
+                    url: chemin,
+                    type: 'GET',
+                    success: function(data) {
+                    if (Array.isArray(data))
+                        for(const remise of data){
+                          const r = remise.tauxRemise;
+                          const montTotalBrut  = parseFloat($('#mtTotalVente').val());
+                          const montRemise= (montTotalBrut *r)/100;
+                          $('#mtRemiseVente').val(montRemise.toFixed(2));
+                          //var montTotal=$("#mtTotalVente").val(som.toFixed(2));
+                          console.log('montant brut '+montTotalBrut+' Taux remise ' + r + ' montant remise '+ montRemise);   
+                        }
+                    }
+                });
+            }   
+    }
+
+    //calculer Taxe TVA
+    //vente_comptant_credit
+    function tauxTaxe(taxe){
+        const taxeId  = parseFloat($('#'+taxe).val());
+        var chemin ="/getTauxTaxe/"+ taxeId;
+        console.log(chemin);
+        if (taxeId) {
+                $.ajax({
+                    url: chemin,
+                    type: 'GET',
+                    success: function(data) {
+                    if (Array.isArray(data))
+                        for(const taxes of data){
+                          const t = taxes.tauxTva;
+                          const montApRemise= parseFloat($('#mtTotalVente').val()) + parseFloat($('#mtRemiseVente').val());
+                          console.log('Montant apres remise '+montApRemise);
+                          const montRemise= (montApRemise *t)/100;
+                          console.log('Montant TVA '+ montRemise);
+                          $('#mtTvaVente').val(montRemise.toFixed(2));
+                          //montant net a payer
+                          const montNetPayer = montApRemise + parseFloat($('#mtTvaVente').val()) ;  
+                          console.log('Net a payer '+montNetPayer);
+                          $('#mtNetVente').val(montNetPayer.toFixed(2));
+                        }
+                    }
+                });
+            }
+    }
+
+
+    //afficher la quantité du stock en fonction de l'article choisi : vente_comptant_credit
     function getInfoQte(article_id,key){
         const articleId = jQuery("#"+article_id).val();
             var chemin = "/getQteRestantById/"+articleId;
@@ -474,14 +558,14 @@ function getDonnees(url,id,affiche){
     //afficher les identifiants des clients en fonction de son type client 
     function getInfoClient(typeClient_id){
         const typeClientId= jQuery("#"+typeClient_id).val();
-        var chemin ="/getInfoClientByTypeId/"+typeClientId;
+        var chemin ="/getTypeClientByClient/"+typeClientId;
         console.log(chemin);
+        $('#client_id').empty();
         if (typeClientId) {
                 $.ajax({
                     url: chemin,
                     type: 'GET',
                     success: function(data) {
-                        $('#client_id').empty();
                         $('#client_id').append('<option value="">--Sélectionnez--</option>')
                         if (Array.isArray(data)){
                             for(const client of data){
@@ -524,7 +608,6 @@ function getDonnees(url,id,affiche){
 
     //ajouter une ligne article formulaire : 
     // ravitaillement 
-    // vente_comptant_credit
     function getArticleForm(idForm,form_url, affiche){
         var valeurs = $('select[name="'+idForm+'"]').map(function() {
             return $(this).val();

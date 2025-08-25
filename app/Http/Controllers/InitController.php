@@ -8,7 +8,7 @@ use App\Models\Menu;
 use App\Models\Profilmenu;
 use App\Models\Profilmenuaction;
 use App\Models\User;
-use Illuminate\Http\Request;
+
 use Illuminate\Support\Facades\Hash;
 
 class InitController extends Controller

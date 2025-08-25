@@ -115,10 +115,11 @@ class AjaxController extends Controller
                     }
     }
 
-    //afficher un article en fonction d'un type article choisi formulaire : ravitaillement
+    //afficher un article en fonction d'un type article choisi formulaire : 
+        //ravitaillement
+        //vente_comptant_credit
     public function getTypeArticleById($id,$data){
         $typeArticle = TypeArticle::find($id);
-        //$items = $typeArticle->articles()-> ->orderBy('libelleArticle', 'ASC')->get();
         $items = DB::select('SELECT * FROM articles WHERE "typeArticle_id"='.$id.' AND article_id NOT IN ('.$data.')');
         if(count($items)>0){
             echo '<option value=""></option>';
@@ -148,7 +149,7 @@ class AjaxController extends Controller
     }
 
     //afficher les identites d'un client en fonction de son type client
-    public function getInfoClientByTypeId($id){
+    public function getTypeClientByClient($id){
         $nom= DB::table('clients AS c')
                 ->join('type_clients AS tc','c.typeClient_id','=','tc.typeClient_id')
                 ->where('tc.typeClient_id','=',$id)
@@ -161,7 +162,9 @@ class AjaxController extends Controller
               } 
     }
 
-    //fonction qui permet de ne pas repeter 2 fois un article dans la liste deroulante. formulaire : Ravitaillement
+    //fonction qui permet de ne pas repeter 2 fois un article dans la liste deroulante. formulaire : 
+        //Ravitaillement
+        //vente_comptant_credit
     public function getArticle($data){
         $data_modeAchat = ModeAchat::orderBy('libelleModeAchat','asc')->get();
         $articles=DB::select('SELECT * FROM articles WHERE article_id NOT IN ('.$data.')');
@@ -174,6 +177,7 @@ class AjaxController extends Controller
     }
 
     //afficher article en fonction du type article formulaire : vente_comptant_credit
+    // Non fonctionnel pour le moment
     public function getTypeArticleByArticle($id){
         $data_typeArticle= TypeArticle::orderBy('libelleTypeArticle','ASC')->get();
         $articles = DB::select('SELECT * FROM articles WHERE article_id NOT IN ('.$id.')');
@@ -185,8 +189,32 @@ class AjaxController extends Controller
         ]);
     }
 
+    //afficher la remise
+    public function getTauxRemise($id){
+       $taux= DB::table('remises')
+                ->where('remise_id','=',$id)
+                ->select('remise_id','tauxRemise')
+                ->get();
+              if ($taux->isNotEmpty()){
+                 return response()->json($taux);
+              }else{
+                return response()->json(['error' => 'Aucune donnée'], 404);
+              } 
+    }
     
+    //afficher la taxe
+    public function getTauxTaxe($id){
+        $taxe= DB::table('taxes')
+            ->where('taxe_id','=',$id)
+            ->select('taxe_id','tauxTva')
+            ->get();
+            if ($taxe->isNotEmpty()){
+                return response()->json($taxe);
+            }else{
+                return response()->json(['error' => 'Aucune donnée'], 404);
 
+            }
+    }
     // public function getStructure($typeStructureId){
     //     $typeStructure=TypeStructure::find($typeStructureId);
     //     $structures = $typeStructure->structure()->orderBy('structureLibelle', 'asc')->get();
